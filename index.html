@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link type="text/css" rel="stylesheet" href="MainPageCSS.css">
+    <link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="https://cdn.firebase.com/js/client/2.2.9/firebase.js"></script>
+    <script>
+        $(function() {
+            $("#mid1").click(function(e) {
+                if (e.target.id == "mid1") {
+                    $("#mid1").css("display", "none");
+                    $("#overlay").css("display", "none");
+                    $("#rightSide").stop().animate({
+                        opacity: 0
+                    }, 1000);
+                }
+            });
+        })
+        $(function() {
+            $("#mid2").click(function(e) {
+                if (e.target.id == "mid2") {
+
+                    $("#mid2").css("display", "none");
+                    $("#overlay").css("display", "none");
+                    $("#leftSide").stop().animate({
+                        opacity: 0
+                    }, 1000);
+                }
+            });
+        })
+
+        function join() {
+            $("#mid1").css("display", "block");
+            $("#overlay").css("display", "block");
+            $("#rightSide").stop().animate({
+                opacity: 1
+            }, 1000);
+        }
+
+        function setup() {
+            $("#mid2").css("display", "block");
+            $("#overlay").css("display", "block");
+            $("#leftSide").stop().animate({
+                opacity: 1
+            }, 1000);
+        }
+
+        function show(x) {
+            x.style.width = "auto";
+            x.children[0].style.display = "none";
+            x.children[1].style.display = "block";
+        }
+
+        function hide(x) {
+            x.style.width = "15px";
+            x.children[0].style.display = "block";
+            x.children[1].style.display = "none";
+        }
+    </script>
+</head>
+
+<body>
+
+    <div id="setupButton">
+        <h1 onClick="setup();">Create Game</h1>
+    </div>
+    <div id="joinButton">
+        <h1 onClick="join();">Join Game </h1>
+    </div>
+    <div id="overlay"></div>
+    <div class="menu" id="HowToPlay" onmouseover="show(this);" onmouseout="hide(this);">
+        <span>?</span>
+        <span style="display:none">HowToPlay</span>
+    </div>
+    <div class="menu" id="AboutUs" onmouseover="show(this);" onmouseout="hide(this);">
+        <span>i</span>
+        <span style="display:none">AboutUs</span>
+    </div>
+    <div class="menu" id="ContactUs" onmouseover="show(this);" onmouseout="hide(this);">
+        <span>@</span>
+        <span style="display:none">ContactUs</span>
+    </div>
+    <div id="mid1">
+        <div id="rightSide">
+            <div id="tableDiv">
+                <table id="gameTable">
+                    <tr id="tableHead">
+                        <td width="10"></td>
+                        <td>Games</td>
+                        <td>Players</td>
+                    </tr>
+                </table>
+            </div>
+            <div id="buttonsDiv">
+                <button id="refreshBtn" class="button" onClick="refreshTable();">Refresh</button>
+                <button id="joinBtn" class="button" onClick="joinGame();">Join</button>
+            </div>
+        </div>
+
+    </div>
+    <div id="mid2">
+        <div id="leftSide">
+            <span style="margin:10px;color:#fff;font-size:18px;">Game Name:</span>
+            <br>
+            <br>
+            <input type="text" id="gameName">
+            <br>
+            <script>
+                var userID = Math.random().toString().replace('.', '').substring(0, 10);
+                sessionStorage.userId = userID;
+                var createBtn = function() {
+                    $('#submit').prop('disabled',true);
+                    var session = Math.random().toString().replace('.', '').substring(0, 10);
+                    window.location.href = "god.html?session=" + session+"&"+document.getElementById('gameName').value;
+                    /*$.ajax({
+                        type: "POST",
+                        url: "Server/setupGame.php",
+                        data: {
+                            userId: userID,
+                            session: session,
+                            gameName: document.getElementById('gameName').value
+                        },
+                        success: function(data) {
+                            window.location.href = "god.html?session=" + session+"&"+document.getElementById('gameName').value;
+                        }
+
+                    });*/
+
+                }
+            </script>
+            <button id="submit" type="submit" class="button" onClick=createBtn()> Create</button>
+        </div>
+    </div>
+    <script>
+        var countRow = 1;
+        /*var xmlhttp = new XMLHttpRequest();
+        var data;*/
+
+        function tableFill(data,num) {
+            var table = document.getElementById("gameTable");
+            var row = table.insertRow(countRow);
+            var cell1 = row.insertCell(0);
+            var cell2 = row.insertCell(1);
+            var cell3 = row.insertCell(2);
+            cell1.innerHTML = countRow++;
+            cell2.innerHTML = data.gameName;
+            cell3.innerHTML = num;
+            rowSelect();
+            row.setAttribute('sID', data.roomToken);
+        }
+        var ref = new Firebase("https://flickering-fire-8977.firebaseio.com/");
+        var connectAndFill = function() {
+            ref.on("child_added", function(snapshot, prevChildKey) {
+                var newGame = snapshot.val();
+                newGame = snapshot.child(Object.keys(newGame)[0]).val();
+                if(newGame!=null&&newGame.broadcaster!=null){
+                    tableFill(newGame,snapshot.numChildren());
+                }
+        });
+           /* xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function() {
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                    data = JSON.parse(xmlhttp.responseText);
+                    if (data != null)
+                        for (i = 0; i < data.length; i++) {
+                            tableFill(data[i]);
+                        }
+
+                    rowSelect();
+                }
+            }
+            xmlhttp.open("GET", "Server/getGames.php", true);
+            xmlhttp.send();*/
+        };
+        connectAndFill();
+    </script>
+    <script>
+        var deleteTable = function() {
+            var elmtTable = document.getElementById('gameTable');
+            var rowCount = elmtTable.rows.length;
+
+            for (var x = rowCount - 1; x > 0; x--) {
+                elmtTable.deleteRow(x);
+            }
+        };
+
+        var refreshTable = function() {
+            deleteTable();
+            countRow = 1;
+            connectAndFill();
+        };
+    </script>
+    <script>
+        //join
+        var SesId;
+
+        function rowSelect() {
+            $("#gameTable tr").click(function() {
+                $(this).addClass('selected').siblings().removeClass('selected');
+                SesId = $(this).attr('sID');
+            });
+        }
+
+        function joinGame() {
+            if (SesId != null)
+                window.location.href = "player.html?session=" + SesId;
+        }
+    </script>
+</body>
+
+</html>
