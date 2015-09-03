@@ -489,7 +489,7 @@ var optionsDefaults = {
 , panEnabled: true // enable or disable panning (default enabled)
 , controlIconsEnabled: false // insert icons to give user an option in addition to mouse events to control pan/zoom (default disabled)
 , zoomEnabled: true // enable or disable zooming (default enabled)
-, dblClickZoomEnabled: true // enable or disable zooming by double clicking (default enabled)
+, dblClickZoomEnabled: false // enable or disable zooming by double clicking (default enabled)
 , mouseWheelZoomEnabled: true // enable or disable zooming by mouse wheel (default enabled)
 , zoomScaleSensitivity: 0.2 // Zoom sensitivity
 , minZoom: 0.5 // Minimum Zoom level

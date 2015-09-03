@@ -3,7 +3,7 @@ body {
     overflow: hidden;
     margin: 0;
     padding: 0;
-    background-color: lightBlue;
+    background-color: rgb(89, 89, 255);
     -ms-transform: scale(1, 1);
     /* IE 9 */
     
@@ -19,34 +19,7 @@ body {
     float: right;
     background-color: rgba(255, 255, 128, 0.5);
 }
-#sword {
-    margin-left: 20px;
-    position: relative;
-    -webkit-animation: mymove 8s infinite;
-    -webkit-animation-play-state: paused;
-    -webkit-animation-timing-function: linear;
-    animation: mymove 8s infinite;
-    animation-play-state: paused;
-    animation-timing-function: linear;
-}
-/* Chrome, Safari, Opera */
 
-@-webkit-keyframes mymove {
-    from {
-        left: 0px;
-    }
-    to {
-        left: calc(100%-50);
-    }
-}
-@keyframes mymove {
-    from {
-        left: 0px;
-    }
-    to {
-        left: 100%;
-    }
-}
 #ChatPanel {
     position: fixed;
     bottom: 0;
@@ -185,6 +158,10 @@ width:100%;
 fill:#ff7e00;
 stroke:#000
 }
+.ClickedPath {
+fill:#FF3399;
+stroke:#000
+}
 
 .largefont { 
   color: #0066FF; 
@@ -211,10 +188,10 @@ text {
 g {
     cursor: pointer;
 }
-path:hover {
+/*path:hover {
     fill: #DBB8FF;
-    opacity: 1;
-}
+    opacity: 1.0;
+}*/
 
 #Connection{
 	z-index:110;

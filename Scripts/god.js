@@ -7,20 +7,19 @@
 		console.log("Kendi UserID: "+sesUserId);
         // data channel begin
 		var channel = new DataChannel();
+		
 		channel.onopen = function (userid) {	
-			console.log("userid: "+userID+"baglanilan user:"+userid);
+		    channel.send("updateMap-"+JSON.stringify(syncArray));
 			var y;
 			for(y in houseArray){
 			    console.log(houseArray[y]);
 			    if(houseArray[y] != "bos")
 			        channel.send("choose-"+y+"-"+houseArray[y]);
 			}
-			// oyuna herhangi biri katildigi zaman caliscak
-			// sadece init
 		};
+		
 		channel.onmessage = function (message, userid) {
 		        var x=message.split("-");
-		        
 		        if(x[0] == "choose"){
                     if(houseArray[x[1]] == "bos"){
     				        houseArray[x[1]]=x[2];

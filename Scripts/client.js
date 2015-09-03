@@ -42,6 +42,16 @@
 		    else if(x[0] == "chat"){
 		        chatEvent(x[1], x[2]);
 		    }
+		    else if(x[0] =="updateMap"){
+		        (function () {
+		            var obj=JSON.parse(x[1]);
+                    for(var key in obj){
+                    $('#'+key).attr('class',obj[key]);
+                    $('.'+obj[key]).mouseover();
+                    $('.'+obj[key]).mouseout();
+                    }
+                })();
+		    }
 		};
 
 		channel.onleave = function (userid) {
