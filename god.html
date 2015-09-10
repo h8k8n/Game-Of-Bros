@@ -26,7 +26,7 @@
         <div id=updatePanel>
             <button id="updateMap" onClick="updateMap()" type="button">Update Map</button>
             <button id="reverseMap" onClick="reverseMap()" type="button">Reverse Changes</button>
-            
+
         </div>
         <div id="ChatPanel">
 
@@ -44,7 +44,7 @@
         <object id="svgCanvas" type="image/svg+xml"  data="map.svg"></object>
         <script>
         var count = 0;
-        //var username = prompt("Please enter your name");
+        var username = prompt("Please enter your name");
         var selectedPathArr = {};
         var changesArray ={};
         var syncArray ={};
@@ -72,12 +72,12 @@
             }
              for(var key in changesArray){
                  syncArray[key]=changesArray[key];
-             }   
+             }
             channel.send('updateMap-'+JSON.stringify(changesArray));
             changesArray={};
             selectedPathArr = {};
         }
-           
+
             svgDom.addEventListener("load",function(){
             svgDoc = svgDom.contentDocument; //get the inner DOM of map.svg
             var path =$(svgDoc).find('path');
@@ -87,11 +87,11 @@
                         dragging = 1;
                     });
                 });
-    
-                $(path).mouseup(function() {
+
+                $(svgDoc).mouseup(function() {
                     $(svgDoc).unbind('mousemove');
                 });
-    
+
                 $(path).click(function() {
                     if (dragging != 1) {
                         var id=$(this).attr('id');
